@@ -82,7 +82,23 @@
                             Dashboard
                         </a>
 
-                        @if($isSuperAdmin || $isAdminCabangIndo)
+                        {{-- === Desktop: Super Admin sees a grouped dropdown === --}}
+                        @if($isSuperAdmin)
+                        <div class="relative group">
+                            <button class="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition {{ (request()->routeIs('input-barang') || request()->routeIs('daftar-barang') || request()->routeIs('sorting-pusat') || request()->routeIs('cabang-hk')) ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                                📦 Proses Barang
+                                <svg class="w-3 h-3 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div class="absolute left-0 mt-1 hidden group-hover:block bg-slate-900 border border-slate-800 rounded-lg shadow-lg z-50 min-w-max">
+                                <a href="{{ route('input-barang') }}" class="block px-4 py-2 text-sm {{ request()->routeIs('input-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">➕ Terima Barang</a>
+                                <a href="{{ route('daftar-barang') }}" class="block px-4 py-2 text-sm {{ request()->routeIs('daftar-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">📦 Status Barang</a>
+                                <a href="{{ route('sorting-pusat') }}" class="block px-4 py-2 text-sm {{ request()->routeIs('sorting-pusat') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">🏢 Hub Pusat (Boxing)</a>
+                                <a href="{{ route('cabang-hk') }}" class="block px-4 py-2 text-sm {{ request()->routeIs('cabang-hk') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">🇭🇰 Cabang HK</a>
+                            </div>
+                        </div>
+                        @else
+                        {{-- Non-super-admin: flat links per role --}}
+                        @if($isAdminCabangIndo)
                         <a href="{{ route('input-barang') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('input-barang') ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                             ➕ Terima Barang
                         </a>
@@ -92,16 +108,17 @@
                             📦 Status Barang
                         </a>
 
-                        @if($isSuperAdmin || $isAdminPusat)
+                        @if($isAdminPusat)
                         <a href="{{ route('sorting-pusat') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('sorting-pusat') ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                             🏢 Hub Pusat (Boxing)
                         </a>
                         @endif
 
-                        @if($isSuperAdmin || $isAdminCabangHk)
+                        @if($isAdminCabangHk)
                         <a href="{{ route('cabang-hk') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('cabang-hk') ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                             🇭🇰 Cabang HK
                         </a>
+                        @endif
                         @endif
 
                         @if($isSuperAdmin)
@@ -109,26 +126,91 @@
                             ⚙️ Kelola Cabang
                         </a>
                         @endif
-                    </div>
+                    @if($isSuperAdmin)
+                    <div class="relative group">
+    <button class="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition {{ (request()->routeIs('laporan-fee-cabang') || request()->routeIs('laporan-status-barang')) ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+        📊 Laporan
+        <svg class="w-3 h-3 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+    <div class="absolute left-0 mt-1 hidden group-hover:block bg-slate-900 border border-slate-800 rounded-lg shadow-lg">
+        <a href="{{ route('laporan-fee-cabang') }}" class="block px-3 py-2 text-sm {{ request()->routeIs('laporan-fee-cabang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">Fee Cabang</a>
+        <a href="{{ route('laporan-status-barang') }}" class="block px-3 py-2 text-sm {{ request()->routeIs('laporan-status-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">Status Barang</a>
+    </div>
+</div>
+@endif
+</div>
 
-                    <!-- User Account & Mobile Toggle Button -->
-                    <div class="flex items-center space-x-3">
-                        <div class="text-right hidden sm:block">
-                            <div class="text-xs font-bold text-slate-100">{{ Auth::user()->name }}</div>
-                            <div class="text-[10px] text-emerald-400 font-medium">
-                                {{ Auth::user()->cabang ? Auth::user()->cabang->nama_cabang : 'Super Admin' }}
-                            </div>
-                        </div>
-
-                        <!-- Desktop Logout Button -->
-                        <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
-                            @csrf
-                            <button type="submit" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition" title="Keluar / Logout">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    <!-- User Dropdown Menu -->
+                    <div class="flex items-center gap-2">
+                        <div class="relative" x-data="{ userMenuOpen: false }" @keydown.escape.window="userMenuOpen = false">
+                            <button @click="userMenuOpen = !userMenuOpen"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-slate-800 transition group">
+                                <!-- Avatar -->
+                                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white font-extrabold text-sm shrink-0">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div class="text-right hidden sm:block">
+                                    <div class="text-xs font-bold text-slate-100 leading-tight">{{ Auth::user()->name }}</div>
+                                    <div class="text-[10px] text-emerald-400 font-medium">
+                                        {{ Auth::user()->cabang ? Auth::user()->cabang->nama_cabang : 'Super Admin' }}
+                                    </div>
+                                </div>
+                                <svg class="w-3 h-3 text-slate-400 hidden sm:block transition-transform" :class="userMenuOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
-                        </form>
+
+                            <!-- Dropdown Panel -->
+                            <div x-show="userMenuOpen"
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                @click.outside="userMenuOpen = false"
+                                style="display:none"
+                                class="absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50">
+
+                                <!-- User Info Header -->
+                                <div class="px-4 py-3 border-b border-slate-800">
+                                    <div class="text-xs font-bold text-slate-100">{{ Auth::user()->name }}</div>
+                                    <div class="text-[10px] text-slate-400 font-mono truncate">{{ Auth::user()->email }}</div>
+                                </div>
+
+                                <div class="py-1.5">
+                                    <!-- Ganti Password — semua user -->
+                                    <a href="{{ route('ganti-password') }}"
+                                        @click="userMenuOpen = false"
+                                        class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition {{ request()->routeIs('ganti-password') ? 'bg-slate-800 text-white' : '' }}">
+                                        <span class="text-base">🔐</span>
+                                        <span class="font-medium">Ganti Password</span>
+                                    </a>
+
+                                    @if($isSuperAdmin)
+                                    <!-- Kelola User — super admin only -->
+                                    <a href="{{ route('kelola-user') }}"
+                                        @click="userMenuOpen = false"
+                                        class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition {{ request()->routeIs('kelola-user') ? 'bg-slate-800 text-white' : '' }}">
+                                        <span class="text-base">👥</span>
+                                        <span class="font-medium">Kelola Akun User</span>
+                                    </a>
+                                    @endif
+                                </div>
+
+                                <!-- Logout -->
+                                <div class="border-t border-slate-800 py-1.5">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition">
+                                            <span class="text-base">🚪</span>
+                                            <span class="font-medium">Keluar / Logout</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Mobile Hamburger Button -->
                         <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none md:hidden transition">
@@ -147,6 +229,7 @@
                         </a>
                     </div>
                     @endauth
+
                 </div>
             </div>
 
@@ -161,7 +244,18 @@
                     📊 Dashboard
                 </a>
 
-                @if($isSuperAdmin || $isAdminCabangIndo)
+                @if($isSuperAdmin)
+                {{-- Super Admin: grouped submenu --}}
+                <div class="space-y-1">
+                    <span class="block px-3 py-2.5 text-sm font-medium text-slate-300">📦 Proses Barang</span>
+                    <a href="{{ route('input-barang') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('input-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">➕ Terima Barang</a>
+                    <a href="{{ route('daftar-barang') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('daftar-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">📦 Status Barang</a>
+                    <a href="{{ route('sorting-pusat') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('sorting-pusat') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">🏢 Hub Pusat (Boxing)</a>
+                    <a href="{{ route('cabang-hk') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('cabang-hk') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">🇭🇰 Cabang HK</a>
+                </div>
+                @else
+                {{-- Non-super-admin: flat links per role --}}
+                @if($isAdminCabangIndo)
                 <a href="{{ route('input-barang') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('input-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     ➕ Terima Barang Baru
                 </a>
@@ -171,25 +265,39 @@
                     📦 Status Barang
                 </a>
 
-                @if($isSuperAdmin || $isAdminPusat)
+                @if($isAdminPusat)
                 <a href="{{ route('sorting-pusat') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('sorting-pusat') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     🏢 Hub Pusat (Boxing)
                 </a>
                 @endif
 
-                @if($isSuperAdmin || $isAdminCabangHk)
+                @if($isAdminCabangHk)
                 <a href="{{ route('cabang-hk') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('cabang-hk') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     🇭🇰 Cabang HK
                 </a>
+                @endif
                 @endif
 
                 @if($isSuperAdmin)
                 <a href="{{ route('kelola-cabang') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('kelola-cabang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     ⚙️ Kelola Cabang
                 </a>
+                <a href="{{ route('kelola-user') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('kelola-user') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    👥 Kelola Akun User
+                </a>
                 @endif
 
-                <div class="pt-2 border-t border-slate-800">
+                <div class="pt-2 border-t border-slate-800 space-y-1">
+                @if($isSuperAdmin)
+                    <div class="space-y-1">
+    <span class="block px-3 py-2.5 text-sm font-medium text-slate-300">📊 Laporan</span>
+    <a href="{{ route('laporan-fee-cabang') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('laporan-fee-cabang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">Fee Cabang</a>
+    <a href="{{ route('laporan-status-barang') }}" class="block pl-6 pr-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('laporan-status-barang') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">Status Barang</a>
+</div>
+                    @endif
+                    <a href="{{ route('ganti-password') }}" class="block px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('ganti-password') ? 'bg-emerald-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        🔐 Ganti Password
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition flex items-center space-x-2">
